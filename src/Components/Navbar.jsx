@@ -12,6 +12,7 @@ import { Button } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { Link } from "react-router-dom";
 
 const pages = ["SignUp", "Login", "Update"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -118,6 +119,8 @@ function Navbar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
+                component={Link}
+                to={`/${page}`}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

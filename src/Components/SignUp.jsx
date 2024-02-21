@@ -71,7 +71,7 @@ const HomePage = () => {
   };
 
   return (
-    <>
+    <div className="signUpContainer">
       {signupAlert.response && (
         <Alert severity={signupAlert.messageType}>{signupAlert.message}</Alert>
       )}
@@ -126,7 +126,7 @@ const HomePage = () => {
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

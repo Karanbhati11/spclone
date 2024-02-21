@@ -1,50 +1,106 @@
 import React, { useState } from "react";
-
-const Login = () => {
+import api from "../api";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import "../styles/signup.css";
+import { Alert, Typography } from "@mui/material";
+const HomePage = () => {
   const [fields, setFields] = useState({
     email: "",
-    username: "",
     password: "",
   });
+
+  const [signupAlert, setAlert] = useState({
+    message: "",
+    messageType: "",
+    response: "",
+  });
+
+  //   const url = "http://localhost:8888";
+  const connectionurl = "http://localhost:8888/login?";
+  const fetcher = async (e) => {
+    e.preventDefault();
+
+    if (fields.email === "" || fields.password === "") {
+      setAlert({
+        messageType: "error",
+        message: "Please enter all the fields",
+        response: true,
+      });
+    } else {
+      await api
+        .get(
+          `${connectionurl}email=${fields.email}&password=${fields.password}`
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            setAlert({
+              messageType: "success",
+              message: "Login Success",
+              response: true,
+            });
+            setFields({
+              email: "",
+              password: "",
+            });
+          } else {
+            setAlert({
+              messageType: "error",
+              message: "something went wrong",
+              response: true,
+            });
+          }
+        })
+        .catch((err) => {
+          setAlert({
+            messageType: "error",
+            message: err.response.data,
+            response: true,
+          });
+        });
+    }
+  };
+
   return (
-    <>
-      <h3>Login</h3>
-      <>
-        <h2>Sign Up</h2>
-        <form>
-          <input
+    <div className="signUpContainer">
+      {signupAlert.response && (
+        <Alert severity={signupAlert.messageType}>{signupAlert.message}</Alert>
+      )}
+
+      <Typography variant="h4" margin={"20px"} component="h4">
+        Login
+      </Typography>
+      <form>
+        <div className="formContainer">
+          <TextField
+            className="formItems"
+            id="filled-basic"
+            label="Email"
             value={fields.email}
             onChange={(e) => setFields({ ...fields, email: e.target.value })}
-            placeholder="email"
+            variant="outlined"
           />
-          <br></br>
-          <br></br>
-          <input
-            value={fields.username}
-            onChange={(e) => setFields({ ...fields, username: e.target.value })}
-            placeholder="Username"
-          />
-          <br></br>
-          <br></br>
-          <input
+
+          <TextField
+            className="formItems"
+            id="filled-basic"
+            label="password"
             value={fields.password}
             onChange={(e) => setFields({ ...fields, password: e.target.value })}
-            placeholder="password"
+            variant="outlined"
           />
-          <br></br>
-          <br></br>
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              console.log("test");
-            }}
+          <Button
+            className="formButton"
+            size="large"
+            onClick={fetcher}
+            variant="outlined"
           >
-            Submit
-          </button>
-        </form>
-      </>
-    </>
+            Login
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 
-export default Login;
+export default HomePage;
